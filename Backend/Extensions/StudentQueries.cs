@@ -25,7 +25,7 @@ namespace Backend.Extensions
             query = filterBy switch
             {
                 StudentFilterBy.Name => query.Where(c => c.Name.Contains(FilterValue)),
-                StudentFilterBy.Age => query.Where(c => c.Age.ToString().Contains(FilterValue)),
+                StudentFilterBy.Age => query.Where(c => c.Age >= Convert.ToByte(FilterValue)),
                 StudentFilterBy.Email => query.Where(c => c.Email.Contains(FilterValue)),
                 _ => query
             };
@@ -35,5 +35,14 @@ namespace Backend.Extensions
 
         public static StudentDto ToStudentDto(this Student student) =>
             new(student.StudentId, student.Name, student.Age, student.Email, student.Phone);
+
+        public static Student ToStudent(this StudentForCreationDto student) =>
+            new()
+            {
+                Name = student.Name,
+                Age = student.Age,
+                Email = student.Email,
+                Phone = student.Phone
+            };
     }
 }

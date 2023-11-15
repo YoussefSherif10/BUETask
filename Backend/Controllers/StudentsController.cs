@@ -1,4 +1,6 @@
+using Backend.Controllers.Filters;
 using Backend.Interfaces;
+using Backend.Models.DTOs;
 using Backend.Models.Params;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,8 +22,38 @@ namespace Backend.Controllers
             return Ok(students);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetStudentById")]
         public async Task<IActionResult> GetStudentById(int id) =>
             Ok(await _service.Student.GetStudentById(id));
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> RemoveStudent(int id)
+        {
+            await _service.Student.RemoveStudent(id);
+            return NoContent();
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> AddStudent([FromBody] StudentForCreationDto student)
+        {
+            var createdStudent = await _service.Student.AddStudent(student);
+            return CreatedAtRoute(
+                "GetStudentById",
+                new { id = createdStudent.StudentId },
+                createdStudent
+            );
+        }
+
+        [HttpPut("{id:int}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> UpdateStudent(
+            int id,
+            [FromBody] StudentForUpdateDto student
+        )
+        {
+            await _service.Student.UpdateStudent(id, student);
+            return NoContent();
+        }
     }
 }

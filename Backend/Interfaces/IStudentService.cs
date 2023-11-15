@@ -10,5 +10,11 @@ namespace Backend.Interfaces
         );
 
         public Task<StudentDto> GetStudentById(int id);
+
+        public Task RemoveStudent(int id);
+
+        public Task<StudentDto> AddStudent(StudentForCreationDto student);
+
+        public Task UpdateStudent(int StudentId, StudentForUpdateDto student);
     }
 }

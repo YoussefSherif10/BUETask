@@ -17,8 +17,8 @@ namespace Backend.Services
 
         public IQueryable<Student> GetAllStudents() => FindAll();
 
-        public Task<Student> GetStudentById(int id) =>
-            FindByCondition(x => x.StudentId == id, false).SingleAsync();
+        public Task<Student> GetStudentById(int id, bool trackChanges) =>
+            FindByCondition(x => x.StudentId == id, trackChanges).SingleAsync();
 
         public void UpdateStudent(Student student) => Update(student);
     }
