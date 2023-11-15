@@ -15,10 +15,7 @@ namespace Backend.Services
 
         public void DeleteStudent(Student student) => Delete(student);
 
-        public IQueryable<Student> GetAllStudents()
-        {
-            return FindAll();
-        }
+        public IQueryable<Student> GetAllStudents() => FindAll();
 
         public Task<Student> GetStudentById(int id) =>
             FindByCondition(x => x.StudentId == id, false).SingleAsync();

@@ -17,6 +17,7 @@ builder
         options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
     });
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
 var app = builder.Build();
 
