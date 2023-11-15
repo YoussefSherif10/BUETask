@@ -22,6 +22,15 @@ builder
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder
+    .Services
+    .AddCors(options =>
+    {
+        options.AddPolicy(
+            "CorsPolicy",
+            builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+        );
+    });
 
 var app = builder.Build();
 
@@ -59,6 +68,8 @@ app.UseExceptionHandler(appError =>
 });
 
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy");
 
 app.MapControllers();
 
