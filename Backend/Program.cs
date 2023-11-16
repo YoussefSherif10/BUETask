@@ -31,6 +31,19 @@ builder
             builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
         );
     });
+builder.Services.AddResponseCaching();
+builder
+    .Services
+    .AddHttpCacheHeaders(
+        (expirationOpt) =>
+        {
+            expirationOpt.MaxAge = 180;
+        },
+        (validationOpt) =>
+        {
+            validationOpt.MustRevalidate = true;
+        }
+    );
 
 var app = builder.Build();
 
@@ -70,6 +83,9 @@ app.UseExceptionHandler(appError =>
 app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
+
+app.UseResponseCaching();
+app.UseHttpCacheHeaders();
 
 app.MapControllers();
 
