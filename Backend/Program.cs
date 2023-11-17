@@ -4,6 +4,7 @@ using Backend.Interfaces;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,19 +32,7 @@ builder
             builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
         );
     });
-builder.Services.AddResponseCaching();
-builder
-    .Services
-    .AddHttpCacheHeaders(
-        (expirationOpt) =>
-        {
-            expirationOpt.MaxAge = 180;
-        },
-        (validationOpt) =>
-        {
-            validationOpt.MustRevalidate = true;
-        }
-    );
+
 
 var app = builder.Build();
 
@@ -71,9 +60,13 @@ app.UseExceptionHandler(appError =>
                         {
                             InvalidOperationException => StatusCodes.Status404NotFound,
                             BadHttpRequestException => StatusCodes.Status400BadRequest,
+                            DbUpdateException => StatusCodes.Status400BadRequest,
                             _ => StatusCodes.Status500InternalServerError
                         },
-                        Message = contextFeature.Error.Message
+                        Message = 
+                        contextFeature.Error is DbUpdateException ? 
+                            "The entered email already exists" :
+                            contextFeature.Error.Message
                     }.ToString()
                 );
         }
@@ -84,8 +77,6 @@ app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
 
-app.UseResponseCaching();
-app.UseHttpCacheHeaders();
 
 app.MapControllers();
 

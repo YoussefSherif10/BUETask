@@ -30,6 +30,14 @@ namespace Backend.Extensions
                 _ => query
             };
 
+        public static IQueryable<Student> Search(this IQueryable<Student> query, string? searchTerm) 
+        {
+            if(!string.IsNullOrEmpty(searchTerm))
+                return query.Where(x => x.Name.ToLower().Contains(searchTerm.ToLower()));
+
+            return query;
+        }
+
         public static IQueryable<StudentDto> ToStudentDto(this IQueryable<Student> query) =>
             query.Select(s => new StudentDto(s.StudentId, s.Name, s.Age, s.Email, s.Phone));
 

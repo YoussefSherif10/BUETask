@@ -32,6 +32,7 @@ namespace Backend.Services
                 .Sort(studentParams.SortBy)
                 .Pagination(studentParams.PageNumber, studentParams.PageSize)
                 .Filter(studentParams.FilterBy, studentParams.FilterValue)
+                .Search(studentParams.SearchTerm)
                 .ToStudentDto()
                 .ToListAsync();
 
